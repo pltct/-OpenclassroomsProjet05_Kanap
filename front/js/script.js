@@ -23,11 +23,12 @@ fetch('http://localhost:3000/api/products')
 
       // Rattachement de nos balises au DOM      
       const sectionItems = document.querySelector("#items")
+
+      // Rattache la balise a son parent
       sectionItems.appendChild (anchor);
+      anchor.appendChild (articleElement);
       articleElement.appendChild (imageElement);
       articleElement.appendChild (nomElement);
       articleElement.appendChild (descriptionElement);
-      anchor.appendChild (articleElement);
     };
-
 });
