@@ -22,7 +22,7 @@ fetch('http://localhost:3000/api/products')
       descriptionElement.innerText = data[i].description;
 
       // Rattachement de nos balises au DOM      
-      const sectionItems = document.querySelector("#items")
+      const sectionItems = document.querySelector("#items");
 
       // Rattache la balise a son parent
       sectionItems.appendChild (anchor);
@@ -31,4 +31,4 @@ fetch('http://localhost:3000/api/products')
       articleElement.appendChild (nomElement);
       articleElement.appendChild (descriptionElement);
     };
-});
+  });
