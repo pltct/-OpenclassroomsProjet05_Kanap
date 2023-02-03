@@ -43,9 +43,9 @@ button.addEventListener("click", () => {
   } else {
     if (quantity >= 1 && quantity <= 100){
       const data = {
-        id: id,
-        color: color,
-        quantity: Number(quantity),
+        idProduct: id,
+        colorProduct: color,
+        quantityProduct: Number(quantity),
       }
       
       let panier = localStorage.getItem("panier");
@@ -58,26 +58,28 @@ button.addEventListener("click", () => {
       // si le canapé est déja dans le panier (meme id, meme couleur)
       let canape = 0;
       for (let i = 0; i < panier.length; i++){
-        if (panier[i].color === data.color && panier[i].id === data.id) {
+        if (panier[i].colorProduct === data.colorProduct && panier[i].idProduct === data.idProduct) {
           canape = 1;
-          let newQuantity = panier[i].quantity + data.quantity;
+          let newQuantity = panier[i].quantityProduct + data.quantityProduct;
           if (newQuantity > 100){
             alert ("Quantité supérieure à 100");
           } else {
             // alors je modifie la quantité
-            panier[i].quantity = newQuantity;
+            panier[i].quantityProduct = newQuantity;
           }
         }
       } 
       if (canape === 0) {
         panier.push(data);
       } 
+      if (confirm("Aller au panier ?")) {
+        window.location.href = "cart.html"
+      }
       // sinon j'ajoute le canapé au panier     
       localStorage.setItem("panier",JSON.stringify(panier));
     } else {
       alert ("Quantité non comprise entre 1 et 100");
-    }
+    } 
   }
 
 })
-
