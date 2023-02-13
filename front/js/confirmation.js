@@ -1,6 +1,6 @@
 const orderId = getOrderId()
 displayOrderId(orderId)
-
+removeLocalStorageCache()
 
 function getOrderId() {
     let params = (new URL(document.location)).searchParams;
@@ -13,3 +13,6 @@ function displayOrderId(orderId) {
     orderIdElement.innerText = orderId
 }
 
+function removeLocalStorageCache() {
+    localStorage.clear()
+}
