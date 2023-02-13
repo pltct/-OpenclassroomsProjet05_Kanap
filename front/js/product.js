@@ -42,25 +42,23 @@ button.addEventListener("click", () => {
     alert ("Veuillez sélectionner une couleur");
   } else {
     if (quantity >= 1 && quantity <= 100){
-      const data = {
+      const dataProduct = {
         idProduct: id,
         colorProduct: color,
         quantityProduct: Number(quantity),
       }
-      
       let panier = localStorage.getItem("panier");
       if (panier === null) {
         panier = [];
       } else {
         panier = JSON.parse(panier);
       }
-
       // si le canapé est déja dans le panier (meme id, meme couleur)
       let canape = 0;
       for (let i = 0; i < panier.length; i++){
-        if (panier[i].colorProduct === data.colorProduct && panier[i].idProduct === data.idProduct) {
+        if (panier[i].colorProduct === dataProduct.colorProduct && panier[i].idProduct === dataProduct.idProduct) {
           canape = 1;
-          let newQuantity = panier[i].quantityProduct + data.quantityProduct;
+          let newQuantity = panier[i].quantityProduct + dataProduct.quantityProduct;
           if (newQuantity > 100){
             alert ("Quantité supérieure à 100");
           } else {
@@ -70,7 +68,7 @@ button.addEventListener("click", () => {
         }
       } 
       if (canape === 0) {
-        panier.push(data);
+        panier.push(dataProduct);
       } 
       if (confirm("Aller au panier ?")) {
         window.location.href = "cart.html"
