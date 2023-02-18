@@ -6,8 +6,8 @@ fetch('http://localhost:3000/api/products/')
   .then((response) => response.json())
   .then((data) => {  
 
-      if (panier === null) {
-          alert ("Veuillez selectionner un article")
+      if (panier === null || panier.length === 0) {
+          alert ("Veuillez selectionner un article, s'il vous plaît.");
         } else {
             //*** parcours panier ***//
             for (let i = 0; i < panier.length; i++){
@@ -76,7 +76,7 @@ fetch('http://localhost:3000/api/products/')
                 deleteElement.addEventListener ("click", function () {
                     panier.splice(i, 1); //supprime le ieme element //
                     localStorage.setItem("panier", JSON.stringify(panier)); 
-                    location.reload(); 
+                    location.reload();
                 })
             
                 const totalQuantity = document.querySelector ("#totalQuantity");
@@ -112,15 +112,15 @@ btnCommand.addEventListener("click", function (e) {
     e.preventDefault();
     const form = document.querySelector(".cart__order__form");
     const inputs = form.querySelectorAll("input");
-    
+    for (let input of inputs)
+
     //message element vide pour utilisateur//
-    if (panier.length === 0) {
-        alert ("Veuillez selectionner un article avant de commander");
+    if (panier === null || panier.length === 0) {
+        alert ("Veuillez selectionner un article avant de commander.");
         return;
     } else {
-        for (let input of inputs)
         if (input.value === "") {
-            alert ("Veuillez remplir tous les champs svp");
+            alert ("Veuillez renseigner tous les champs, s'il vous plaît.");
             return;
         };
     };
@@ -144,28 +144,54 @@ btnCommand.addEventListener("click", function (e) {
     };
 
     //*** regEx ***//
-    const regExfirstNameLastNameCity = /^[A-Za-z\-']{3,20}$/;
-    if (regExfirstNameLastNameCity.test(firstName.value) 
-    && regExfirstNameLastNameCity.test(lastName.value) 
-    && regExfirstNameLastNameCity.test(city.value)) {
+    const regExfirstNameLastName = /^[A-Za-z\-']{3,20}$/;  
+    if (regExfirstNameLastName.test(firstName.value) === false) {
+        const firstNameErrorMsg = document.querySelector("#firstNameErrorMsg")
+        alert ("Le prénom, doit être composé que de lettres et au minimum 3.");
+        firstNameErrorMsg.innerText = "Veuillez renseigner correctement ce champ."
+        return
     } else {
-        alert ("Le nom, le prénom et la ville, doit être composés que de lettres et au minimum 3");
-        return;
-    };
+        firstNameErrorMsg.innerText = ""
+    }
 
-    const regExAdress = /^[A-Za-z0-9\é\è\-' ]{5,40}$/;
-    if (regExAdress.test(address.value)) {
+    const regExNomCity = /^[A-Za-z\-']{2,20}$/;
+    if (regExNomCity.test(lastName.value) === false) {
+        const lastNameErrorMsg = document.querySelector("#lastNameErrorMsg")
+        alert ("Le nom, doit être composé que de lettres et au minimum 3.");
+        lastNameErrorMsg.innerText = "Veuillez renseigner correctement ce champ."
+        return
     } else {
-        alert ("Adresse non valide");
+        lastNameErrorMsg.innerText = ""
+    }
+
+    if (regExNomCity.test(city.value) === false) {
+        const cityErrorMsg = document.querySelector("#cityErrorMsg")
+        alert ("La ville, doit être composée que de lettres et au minimum 2.");
+        cityErrorMsg.innerText = "Veuillez renseigner correctement ce champ."
+        return
+    } else {
+        cityErrorMsg.innerText = ""
+    }
+        
+    const regExAdress = /^[A-Za-z0-9\é\è\-' ]{5,40}$/;
+    if (regExAdress.test(address.value) === false) {
+        const addressErrorMsg = document.querySelector("#addressErrorMsg");
+        alert ("L'adresse, doit être composée que de chiffres et de lettres");
+        addressErrorMsg.innerText = "Veuillez renseigner correctement ce champ"
         return;
-    };
+    } else {
+        addressErrorMsg.innerText = "";
+    }
 
     const regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,3}$/;
-    if (regExEmail.test(email.value)) {
-    } else {
+    if (regExEmail.test(email.value) === false) {
+        const emailErrorMsg = document.querySelector("#emailErrorMsg");
         alert ("Email non valide");
+        emailErrorMsg.innerText = "Veuillez renseigner correctement ce champ"
         return;
-    };
+    } else {
+        emailErrorMsg.innerText = ""
+    }
 
     fetch('http://localhost:3000/api/products/order', {
         method: 'POST',

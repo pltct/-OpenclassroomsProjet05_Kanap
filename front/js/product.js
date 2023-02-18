@@ -5,12 +5,14 @@ fetch('http://localhost:3000/api/products/' + id)
   .then((response) => response.json())
   .then((data) => {
 
+    // rattachement de nos balise au DOM
+    const divItemImg = document.querySelector(".item__img");
+
     // creation des balises
     const imageElement = document.createElement("img");
     imageElement.src = data.imageUrl;
     imageElement.alt = data.altTxt;
-    // rattachement de nos balise au DOM
-    const divItemImg = document.querySelector(".item__img");
+    
     // Rattache la balise a son parent
     divItemImg.appendChild(imageElement);
 
