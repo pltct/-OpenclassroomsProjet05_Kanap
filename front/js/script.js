@@ -2,7 +2,10 @@
 fetch('http://localhost:3000/api/products')
   .then((response) => response.json())
   .then((data) => {
-    
+    afficheCanapes(data);
+  });
+
+  function afficheCanapes(data) {
     for (let i = 0; i < data.length; i++) {
         
       // Creation des balises
@@ -17,7 +20,7 @@ fetch('http://localhost:3000/api/products')
 
       const nomElement = document.createElement("h3");
       nomElement.innerText = data[i].name;
-  
+      
       const descriptionElement = document.createElement("p");
       descriptionElement.innerText = data[i].description;
 
@@ -31,4 +34,5 @@ fetch('http://localhost:3000/api/products')
       articleElement.appendChild (nomElement);
       articleElement.appendChild (descriptionElement);
     };
-  });
+
+  }

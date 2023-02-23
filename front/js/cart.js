@@ -5,9 +5,14 @@ let panier = JSON.parse (localStorage.getItem ("panier"));
 fetch('http://localhost:3000/api/products/')
   .then((response) => response.json())
   .then((data) => {  
+    affichePanier(panier, data);
+})  
 
-      if (panier === null || panier.length === 0) {
-          alert ("Veuillez selectionner un article, s'il vous plaît.");
+
+function affichePanier(panier, data) {
+    if (panier === null || panier.length === 0) {
+        alert ("Veuillez selectionner un article s'il vous plait.")
+        return
         } else {
             //*** parcours panier ***//
             for (let i = 0; i < panier.length; i++){
@@ -104,106 +109,94 @@ fetch('http://localhost:3000/api/products/')
                 divDelete.appendChild (deleteElement);
             }
         }
-})  
+
+}
 
 //*** selection du bouton commander ***//
 const btnCommand = document.querySelector("#order");
 btnCommand.addEventListener("click", function (e) {
     e.preventDefault();
-    const form = document.querySelector(".cart__order__form");
-    const inputs = form.querySelectorAll("input");
-    for (let input of inputs)
-
-    //message element vide pour utilisateur//
-    if (panier === null || panier.length === 0) {
-        alert ("Veuillez selectionner un article avant de commander.");
-        return;
-    } else {
-        if (input.value === "") {
-            alert ("Veuillez renseigner tous les champs, s'il vous plaît.");
-            return;
-        };
-    };
-
-    //les id dans un array//
-    let ids = [];
-    for (let article of panier) {
-        ids.push(article.idProduct);
-    };
-
-    //creation de l'objet//
-    const dataContact = {
-        contact: {
-            firstName: document.querySelector("#firstName").value, //recupere la valeur du formulaire pour l'objet "contact"
-            lastName: document.querySelector("#lastName").value,
-            address: document.querySelector("#address").value,
-            city: document.querySelector("#city").value,
-            email: document.querySelector("#email").value
-        },
-        products: ids
-    };
-
-    //*** regEx ***//
-    const regExfirstNameLastName = /^[A-Za-z\-']{3,20}$/;  
-    if (regExfirstNameLastName.test(firstName.value) === false) {
-        const firstNameErrorMsg = document.querySelector("#firstNameErrorMsg")
-        alert ("Le prénom, doit être composé que de lettres et au minimum 3.");
-        firstNameErrorMsg.innerText = "Veuillez renseigner correctement ce champ."
-        return
-    } else {
-        firstNameErrorMsg.innerText = ""
-    }
-
-    const regExNomCity = /^[A-Za-z\-']{2,20}$/;
-    if (regExNomCity.test(lastName.value) === false) {
-        const lastNameErrorMsg = document.querySelector("#lastNameErrorMsg")
-        alert ("Le nom, doit être composé que de lettres et au minimum 3.");
-        lastNameErrorMsg.innerText = "Veuillez renseigner correctement ce champ."
-        return
-    } else {
-        lastNameErrorMsg.innerText = ""
-    }
-
-    if (regExNomCity.test(city.value) === false) {
-        const cityErrorMsg = document.querySelector("#cityErrorMsg")
-        alert ("La ville, doit être composée que de lettres et au minimum 2.");
-        cityErrorMsg.innerText = "Veuillez renseigner correctement ce champ."
-        return
-    } else {
-        cityErrorMsg.innerText = ""
-    }
-        
-    const regExAdress = /^[A-Za-z0-9\é\è\-' ]{5,40}$/;
-    if (regExAdress.test(address.value) === false) {
-        const addressErrorMsg = document.querySelector("#addressErrorMsg");
-        alert ("L'adresse, doit être composée que de chiffres et de lettres");
-        addressErrorMsg.innerText = "Veuillez renseigner correctement ce champ"
-        return;
-    } else {
-        addressErrorMsg.innerText = "";
-    }
-
-    const regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,3}$/;
-    if (regExEmail.test(email.value) === false) {
-        const emailErrorMsg = document.querySelector("#emailErrorMsg");
-        alert ("Email non valide");
-        emailErrorMsg.innerText = "Veuillez renseigner correctement ce champ"
-        return;
-    } else {
-        emailErrorMsg.innerText = ""
-    }
-
-    fetch('http://localhost:3000/api/products/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataContact)
-    })
-       .then((Response) => Response.json())
-       .then((data) => {
-        window.location.href = "confirmation.html?orderId=" + data.orderId;
-        })
-       .catch((error) => console.error(error));
-
+    envoieCommande();
 })
+
+function envoieCommande() {
+        //message element vide pour utilisateur//
+        if (panier === null || panier.length === 0) {
+            alert ("Veuillez selectionner un article avant de commander.");
+            return;
+        } 
+    
+        //les id dans un array//
+        let ids = [];
+        for (let article of panier) {
+            ids.push(article.idProduct);
+        };
+    
+        //creation de l'objet//
+        const dataContact = {
+            contact: {
+                firstName: document.querySelector("#firstName").value, //recupere la valeur du formulaire pour l'objet "contact"
+                lastName: document.querySelector("#lastName").value,
+                address: document.querySelector("#address").value,
+                city: document.querySelector("#city").value,
+                email: document.querySelector("#email").value
+            },
+            products: ids
+        };
+    
+        //*** regEx ***//
+        const regExfirstNameLastName = /^[A-Za-z\-']{3,20}$/;  
+        if (regExfirstNameLastName.test(firstName.value) === false) {
+            const firstNameErrorMsg = document.querySelector("#firstNameErrorMsg")
+            firstNameErrorMsg.innerText = "Veuillez renseigner correctement ce champ. \n Le prénom, doit être composé que de lettres."
+        } else {
+            firstNameErrorMsg.innerText = ""
+        }
+    
+        const regExNomCity = /^[A-Za-z\-']{2,20}$/;
+        if (regExNomCity.test(lastName.value) === false) {
+            const lastNameErrorMsg = document.querySelector("#lastNameErrorMsg")
+            lastNameErrorMsg.innerText = "Veuillez renseigner correctement ce champ. \n Le nom, doit être composé que de lettres."
+        } else {
+            lastNameErrorMsg.innerText = ""
+        }
+            
+        const regExAdress = /^[A-Za-z0-9\é\è\-' ]{5,40}$/;
+        if (regExAdress.test(address.value) === false) {
+            const addressErrorMsg = document.querySelector("#addressErrorMsg");
+            addressErrorMsg.innerText = "Veuillez renseigner correctement ce champ. \n L'adresse, doit être composée que de chiffres et de lettres."
+        } else {
+            addressErrorMsg.innerText = "";
+        }
+    
+        if (regExNomCity.test(city.value) === false) {
+            const cityErrorMsg = document.querySelector("#cityErrorMsg")
+            cityErrorMsg.innerText = "Veuillez renseigner correctement ce champ. \n La ville, doit être composée que de lettres."
+        } else {
+            cityErrorMsg.innerText = ""
+        }
+    
+        const regExEmail = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,3}$/;
+        if (regExEmail.test(email.value) === false) {
+            const emailErrorMsg = document.querySelector("#emailErrorMsg");
+            emailErrorMsg.innerText = "Veuillez renseigner un email valide."
+        } else {
+            emailErrorMsg.innerText = ""
+        }
+    
+        if(regExfirstNameLastName.test(firstName.value) && regExAdress.test(address.value) && regExNomCity.test(city.value) && regExNomCity.test(city.value) && regExEmail.test(email.value)) {
+            fetch('http://localhost:3000/api/products/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataContact)
+            })
+               .then((Response) => Response.json())
+               .then((data) => {
+                window.location.href = "confirmation.html?orderId=" + data.orderId;
+                })
+               .catch((error) => console.error(error));
+        }
+    
+}
